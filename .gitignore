@@ -1,2 +1,27 @@
-# variant_summary
-variant_summary.txt.gz
+# ==========================================
+# HelixGuard Git Ignore Configuration
+# ==========================================
+
+# Ignore massive raw genomic test files from PGP
+data/raw/*.txt
+data/raw/*.vcf
+
+# Ignore massive upstream ClinVar files 
+data/variant_summary.txt.gz
+
+# Do NOT ignore the filtered output blocklist or tracking scripts
+!data/blocklist.csv
+
+# Python environment & cache artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local Virtual Environments
+venv/
+env/
+.env
