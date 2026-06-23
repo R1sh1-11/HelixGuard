@@ -1,8 +1,8 @@
 import pandas as pd
 
-df = pd.read_csv("variant_summary.txt.gz", sep="\t", low_memory=False)
+df = pd.read_csv("data/variant_summary.txt.gz", sep="\t", low_memory=False)
 
-# Your 6 target genes
+#6 target genes
 TARGET_GENES = ["BRCA1", "BRCA2", "APOE", "HTT", "F5", "LDLR"]
 
 filtered = df[
