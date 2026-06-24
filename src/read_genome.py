@@ -11,4 +11,4 @@ def read_genome(filepath):
                 continue
             print(rsid, genotype)
 
-read_genome("data/genome_James_Jones_v5_Full_20230726173828.txt")
+read_genome() #Insert Filename
