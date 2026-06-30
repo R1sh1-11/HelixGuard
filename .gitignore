@@ -23,3 +23,5 @@ htmlcov/
 venv/
 env/
 .env
+
+backup/
