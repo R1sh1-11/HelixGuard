@@ -8,6 +8,7 @@ data/raw/*.vcf
 
 # Ignore massive upstream ClinVar files 
 data/variant_summary.txt.gz
+data/variant_summary.txt
 
 # Do NOT ignore the filtered output blocklist or tracking scripts
 !data/blocklist.csv
