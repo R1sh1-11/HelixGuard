@@ -35,3 +35,6 @@ data/*.db
 # Result outputs (keep CSVs, ignore large txt files)
 results/output*.txt
 results/output_eps*.txt
+
+# Tests
+tests/__pycache__/
