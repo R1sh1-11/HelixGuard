@@ -1,8 +1,8 @@
-# Ignore massive raw genomic test files from PGP
+# Ignore massive raw genomic test files from PGP data
 data/raw/*.txt
 data/raw/*.vcf
 
-# Ignore massive upstream ClinVar files 
+# Ignore massive upstream ClinVar files
 data/variant_summary.txt.gz
 data/variant_summary.txt
 
@@ -18,10 +18,20 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+*.egg-info/
 
 # Local Virtual Environments
 venv/
 env/
 .env
-
+venv311/
 backup/
+
+# Data files
+data/*.txt
+data/*.gz
+data/*.db
+
+# Result outputs (keep CSVs, ignore large txt files)
+results/output*.txt
+results/output_eps*.txt

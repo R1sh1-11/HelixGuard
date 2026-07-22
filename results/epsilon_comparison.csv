@@ -1,0 +1,4 @@
+epsilon,attack_success_pct,correct_inferences,total_targeted
+1.0,13.01,158,1214
+0.5,13.18,160,1214
+0.1,13.01,158,1214
