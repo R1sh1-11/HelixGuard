@@ -68,8 +68,7 @@ def test_tsv_format_structure(file_path):
         return False
 
 if __name__ == "__main__":
-    target_file = "results/output.txt" if os.path.exists("results/output.txt") else "data/output.txt"
-    
+    target_file = "results/sanitized_output.txt" if os.path.exists("results/sanitized_output.txt") else "data/sanitized_output.txt"    
     if len(sys.argv) > 1:
         target_file = sys.argv[1]
 
