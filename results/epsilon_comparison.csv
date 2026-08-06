@@ -1,4 +1,5 @@
-epsilon,attack_success_pct,correct_inferences,total_targeted
-1.0,13.01,158,1214
-0.5,13.18,160,1214
-0.1,13.01,158,1214
+epsilon,mean_success_pct,stdev_pct,min_pct,max_pct,mean_genotypes_changed,trials
+no_dp,14.77,0,14.77,14.77,0,1
+1.0,14.62,0.071,14.52,14.77,1.8,20
+0.5,14.6,0.11,14.36,14.77,2.05,20
+0.1,14.557,0.082,14.44,14.69,2.55,20

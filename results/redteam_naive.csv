@@ -1,9 +1,8 @@
-rsid,true_genotype,sanitized_genotype,ld_neighbor,correct
+rsid,true_genotype,sanitized_genotype,ld_neighbor,disclosed
 rs1894692,AA,AA,True,True
-rs6030,CT,GG,True,False
-rs6032,--,,True,False
+rs6030,CT,GG,False,False
 rs4525,TT,TT,True,True
-rs4524,TT,GG,True,False
+rs4524,TT,GG,False,False
 rs144979314,TT,GG,False,False
 rs6025,CC,GG,False,False
 rs201078171,CC,GG,False,False
@@ -849,7 +848,7 @@ rs80357663,II,GG,False,False
 rs587782824,DD,GG,False,False
 rs397509083,DD,GG,False,False
 rs80356975,CC,GG,False,False
-rs16942,TT,GG,True,False
+rs16942,TT,GG,False,False
 rs56336919,CC,GG,False,False
 rs80357621,II,GG,False,False
 rs183119644,AA,GG,False,False
@@ -885,7 +884,7 @@ rs587776487,CC,GG,False,False
 rs730881462,II,GG,False,False
 rs397509036,II,GG,False,False
 rs4986852,CC,GG,False,False
-rs16941,TT,GG,True,False
+rs16941,TT,GG,False,False
 rs80357647,II,GG,False,False
 rs786202906,II,GG,False,False
 rs80357311,TT,GG,False,False
@@ -1104,7 +1103,6 @@ rs144792613,CC,GG,False,False
 rs799905,GG,GG,True,True
 rs143160357,GG,GG,False,True
 rs11655505,GG,GG,True,True
-rs4793204,--,,True,False
 rs9912203,GG,GG,True,True
 rs55997232,CC,CC,True,True
 rs55791371,AA,AA,True,True

@@ -1,0 +1,17 @@
+# HelixGuard dependencies
+# Requires Python 3.11. Python 3.12+ breaks diffprivlib's sklearn imports.
+
+pandas>=2.0
+numpy>=1.24
+snps>=2.7
+requests>=2.31
+matplotlib>=3.7
+diffprivlib>=0.6
+
+# Pinned: diffprivlib imports private symbols from sklearn.tree._tree
+# that were removed in later releases. Do not bump without testing
+# `python -c "from diffprivlib.mechanisms import Laplace"`.
+scikit-learn==1.4.2
+
+# Tests
+pytest>=7.4

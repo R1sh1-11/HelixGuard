@@ -33,12 +33,15 @@ data/*.gz
 data/*.db
 
 # Result outputs (keep CSVs, ignore large txt files)
+results/*.txt
 results/output*.txt
 results/output_eps*.txt
 
 # Tests
 tests/__pycache__/
 
-# Miscellaneous
+# macOS
 .DS_Store
-results/sanitized_genome_*.txt
+
+# Editor
+.vscode/
