@@ -38,3 +38,7 @@ results/output_eps*.txt
 
 # Tests
 tests/__pycache__/
+
+# Miscellaneous
+.DS_Store
+results/sanitized_genome_*.txt
