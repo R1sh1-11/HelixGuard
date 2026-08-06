@@ -6,7 +6,7 @@ def main():
     output_file = sys.argv[2]
     
     df = sanitize(input_file)
-    df.to_csv(output_file, sep="\t")
+    df.to_csv(output_file, sep="\t", index=False)
     print(f"Saved sanitized genome to {output_file}")
 
 if __name__ == "__main__":

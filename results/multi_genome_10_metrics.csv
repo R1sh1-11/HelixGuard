@@ -1,6 +1,4 @@
 Genome_File,Total_SNPs,Redacted_SNPs,Retained_SNPs,Utility_Retention_%,Execution_Time_s
-genome_Marika_Forsythe_v4_Full_20240828221950.txt,601783,0,601783,100.0,3.18
-genome_James_Jones_v5_Full_20230726173828.txt,643535,0,643535,100.0,3.86
-genome_participant5.txt,677437,1,677436,99.9999,3.93
-genome_Joshua_Yoakem_v5_Full_20250129211749.txt,631454,0,631454,100.0,3.87
-genome_participant4.txt,668894,5,668889,99.9993,4.6
+genome_James_Jones_v5_Full_20230726173828.txt,643535,1033,642502,99.8395,5.93
+genome_Joshua_Yoakem_v5_Full_20250129211749.txt,631454,998,630456,99.842,5.64
+genome_Marika_Forsythe_v4_Full_20240828221950.txt,601783,89,601694,99.9852,4.14

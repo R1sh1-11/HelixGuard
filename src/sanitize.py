@@ -31,7 +31,7 @@ def validate_and_clean(df: pd.DataFrame) -> pd.DataFrame:
       stays intact. They are excluded from blocklist replacement and DP noise.
     - Logs counts for transparency.
     """
-    df["genotype"] = df["genotype"].astype(str).str.strip().str.upper()
+    df["genotype"] = df["genotype"].fillna("--").astype(str).str.strip().str.upper()
 
     missing_mask = df["genotype"].isin(MISSING_GENOTYPES) | df["genotype"].isna()
     invalid_mask = ~missing_mask & ~df["genotype"].isin(VALID_GENOTYPES)
