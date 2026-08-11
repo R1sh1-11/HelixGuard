@@ -1,40 +1,63 @@
+import os
 import pandas as pd
 
-print("[QA] Starting advanced ClinVar parsing...")
-df = pd.read_csv("data/variant_summary.txt.gz", sep="\t", low_memory=False)
+# Point directly to the compressed .gz file
+CLINVAR_PATH = "data/variant_summary.txt.gz"
+OUTPUT_CSV = "data/blocklist.csv"
 
-TARGET_GENES = ["BRCA1", "BRCA2", "APOE", "HTT", "F5", "LDLR"]
+TARGET_GENES = {"BRCA1", "BRCA2", "APOE", "HTT", "F5", "LDLR"}
+PATHOGENIC_TERMS = ["pathogenic", "risk factor", "association"]
 
-#catch "Pathogenic" OR "risk factor" / "association"
-is_target_gene = df["GeneSymbol"].isin(TARGET_GENES)
-has_valid_rsid = df["RS# (dbSNP)"] != -1
+def build_blocklist():
+    print("[1/5] Loading ClinVar variant summary directly from compressed file...")
+    cols = [
+        "GeneSymbol", "ClinicalSignificance", "Type",
+        "ReferenceAlleleVCF", "AlternateAlleleVCF", "RS# (dbSNP)"
+    ]
+    
+    # Pandas automatically handles gzip decompression in-memory!
+    df = pd.read_csv(
+        CLINVAR_PATH, 
+        sep="\t", 
+        usecols=cols, 
+        low_memory=False, 
+        dtype=str
+    )
 
-is_harmful = (
-    df["ClinicalSignificance"].str.contains("athogenic", na=False) | 
-    df["ClinicalSignificance"].str.contains("risk factor", case=False, na=False) |
-    df["ClinicalSignificance"].str.contains("association", case=False, na=False)
-)
+    # 1. Filter Target Genes
+    df = df[df["GeneSymbol"].isin(TARGET_GENES)].copy()
 
-filtered = df[is_target_gene & has_valid_rsid & is_harmful][
-    ["RS# (dbSNP)", "ClinicalSignificance", "PhenotypeList", "GeneSymbol"]
-].copy()
+    # 2. Pathogenicity Filter
+    pattern = "|".join(PATHOGENIC_TERMS)
+    df = df[df["ClinicalSignificance"].str.contains(pattern, case=False, na=False)].copy()
 
-#map population major/safe alleles directly to our targets
-reference_map = {
-    "APOE": "TT",   
-    "BRCA1": "GG",
-    "BRCA2": "AA",
-    "HTT": "CC",
-    "F5": "GG",     
-    "LDLR": "GG"
-}
+    # 3. Keep ONLY Single Nucleotide Variants
+    df = df[df["Type"].str.lower() == "single nucleotide variant"].copy()
 
-filtered["ReferenceAllele"] = filtered["GeneSymbol"].map(reference_map)
-filtered["ReferenceAllele"] = filtered["ReferenceAllele"].fillna("NN")
+    # 4. Clean Reference Alleles: Keep single base {A, C, G, T}
+    df = df[df["ReferenceAlleleVCF"].str.upper().isin(["A", "C", "G", "T"])].copy()
+    df = df[df["AlternateAlleleVCF"].str.upper().isin(["A", "C", "G", "T"])].copy()
 
-#deduplicate to make sure multiple clinical records don't bloat the DB
-filtered = filtered.drop_duplicates(subset=["RS# (dbSNP)"])
+    # 5. Format RS ID
+    df = df[df["RS# (dbSNP)"].notna() & (df["RS# (dbSNP)"] != "-1")].copy()
+    df["rsid"] = df["RS# (dbSNP)"].apply(lambda x: f"rs{x}" if not str(x).startswith("rs") else x)
 
-filtered.to_csv("data/blocklist.csv", index=False)
-print(f"[QA] Completed. Curated {len(filtered)} targeted variants.")
-print(filtered["GeneSymbol"].value_counts())
+    # 6. Build Homozygous Reference Allele (e.g. G -> GG)
+    df["ReferenceAllele"] = df["ReferenceAlleleVCF"].str.upper() * 2
+
+    # 7. Deduplicate by RS ID
+    df = df.drop_duplicates(subset=["rsid"]).copy()
+
+    # Select final columns
+    final_cols = [
+        "rsid", "GeneSymbol", "ClinicalSignificance", 
+        "ReferenceAllele", "ReferenceAlleleVCF", "AlternateAlleleVCF"
+    ]
+    final_df = df[final_cols]
+
+    os.makedirs("data", exist_ok=True)
+    final_df.to_csv(OUTPUT_CSV, index=False)
+    print(f"[SUCCESS] Blocklist created with {len(final_df)} SNVs. Saved to {OUTPUT_CSV}")
+
+if __name__ == "__main__":
+    build_blocklist()
