@@ -32,8 +32,8 @@ MISSING = {"--", "", "00", "XX", "NAN", "NONE"}
 def load_blocklist_ref():
     conn = sqlite3.connect("data/blocklist.db")
     ref = {
-        f"rs{r[0]}": str(r[1]).strip().upper()
-        for r in conn.execute('SELECT "RS# (dbSNP)", ReferenceAllele FROM blocklist')
+        r[0]: str(r[1]).strip().upper()
+        for r in conn.execute("SELECT rsid, ReferenceAllele FROM blocklist")
         if r[1]
     }
     conn.close()
