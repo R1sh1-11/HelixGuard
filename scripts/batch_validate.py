@@ -45,6 +45,7 @@ for gfile in genome_files:
         })
 
 summary_df = pd.DataFrame(metrics)
-summary_df.to_csv("results/multi_genome_10_metrics.csv", index=False)
-print("=== Multi-Run Metrics Saved to results/multi_genome_10_metrics.csv ===")
+out_path = f"results/multi_genome_{len(summary_df)}_metrics.csv"
+summary_df.to_csv(out_path, index=False)
+print(f"=== Multi-Run Metrics Saved to {out_path} ===")
 print(summary_df)
