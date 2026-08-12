@@ -18,8 +18,8 @@ MISSING_GENOTYPES = {"--", "", "00", "XX"}
 def load_blocklist():
     conn = sqlite3.connect("data/blocklist.db")
     cursor = conn.cursor()
-    cursor.execute('SELECT "RS# (dbSNP)", ReferenceAllele FROM blocklist')
-    reference_map = {f"rs{row[0]}": row[1] for row in cursor.fetchall()}
+    cursor.execute("SELECT rsid, ReferenceAllele FROM blocklist")
+    reference_map = {row[0]: row[1] for row in cursor.fetchall()}
     conn.close()
     return reference_map
 
