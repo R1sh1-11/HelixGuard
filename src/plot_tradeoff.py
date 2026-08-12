@@ -1,3 +1,14 @@
+"""
+Plot the differential privacy epsilon sweep from results/epsilon_comparison.csv.
+
+Two panels:
+  left  - residual disclosure rate vs epsilon, with stdev error bars and the
+          no-DP baseline as a reference line
+  right - mean genotypes changed vs epsilon (the mechanism behind the effect)
+
+Reads real measured columns. Nothing is hardcoded.
+"""
+
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,63 +17,41 @@ CSV = "results/epsilon_comparison.csv"
 OUT = "docs/privacy_utility_tradeoff.png"
 
 df = pd.read_csv(CSV)
-print(df.to_string())
 
-# --- adjust these names to match your CSV columns if needed ---
-COL_EPS = "epsilon"
-COL_MEAN = "mean_success_pct"
-COL_STD = "stdev_pct"
-# --------------------------------------------------------------
+baseline = df[df["epsilon"].astype(str) == "no_dp"]
+sweep = df[df["epsilon"].astype(str) != "no_dp"].copy()
+sweep["epsilon"] = sweep["epsilon"].astype(float)
+sweep = sweep.sort_values("epsilon")
 
-# separate the no-DP baseline row from the swept epsilon rows
-eps_str = df[COL_EPS].astype(str).str.lower()
-is_baseline = eps_str.str.contains("base") | eps_str.str.contains("no")
-baseline = df[is_baseline]
-swept = df[~is_baseline].copy()
+x = sweep["epsilon"].astype(str)
 
-# sort swept rows by epsilon descending (1.0 -> 0.5 -> 0.1) for left-to-right reading
-swept["_eps_num"] = pd.to_numeric(swept[COL_EPS], errors="coerce")
-swept = swept.sort_values("_eps_num", ascending=False)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
-x = swept[COL_EPS].astype(str)
-y = swept[COL_MEAN]
-err = swept[COL_STD] if COL_STD in swept.columns else None
-
-fig, ax = plt.subplots(figsize=(8, 5))
-
-# DP line with error bars from trial stdev
-ax.errorbar(
-    x, y,
-    yerr=err,
-    color="#d9534f", marker="o", linewidth=2.5, capsize=5,
-    label="HelixGuard (blocklist + DP)",
-)
-
-# no-DP reference line
+# --- Panel 1: disclosure vs epsilon ---
+ax1.errorbar(x, sweep["mean_success_pct"], yerr=sweep["stdev_pct"],
+             marker="o", linewidth=2.5, capsize=5, color="#d9534f",
+             label="HelixGuard (mean +/- sd)")
 if not baseline.empty:
-    base_val = float(baseline[COL_MEAN].iloc[0])
-    ax.axhline(
-        base_val, color="#5a5a5a", linestyle="--", linewidth=1.8,
-        label=f"No DP baseline ({base_val:.1f}%)",
-    )
+    b = baseline["mean_success_pct"].iloc[0]
+    ax1.axhline(b, color="gray", linestyle="--", linewidth=1.5,
+                label=f"No DP baseline ({b}%)")
+ax1.set_xlabel(r"Privacy Budget (Epsilon $\epsilon$)", fontweight="bold")
+ax1.set_ylabel("Residual Disclosure Rate (%)", fontweight="bold")
+ax1.set_title("Disclosure vs Privacy Budget", fontweight="bold")
+ax1.legend(fontsize=9)
+ax1.grid(axis="y", linestyle="--", alpha=0.5)
 
-ax.set_xlabel(r"Privacy Budget (Epsilon $\epsilon$)", fontsize=12, fontweight="bold")
-ax.set_ylabel("Residual Disclosure on LD Neighbors (%)", fontsize=12, fontweight="bold")
+# --- Panel 2: genotypes changed vs epsilon ---
+ax2.bar(x, sweep["mean_genotypes_changed"], color="#2b5c8f", alpha=0.7, width=0.5)
+ax2.set_xlabel(r"Privacy Budget (Epsilon $\epsilon$)", fontweight="bold")
+ax2.set_ylabel("Mean LD Neighbors Perturbed", fontweight="bold")
+ax2.set_title("Perturbation vs Privacy Budget", fontweight="bold")
+ax2.grid(axis="y", linestyle="--", alpha=0.5)
 
-# autoscale y to the data with a little headroom, instead of a hardcoded 0-25
-lo = min(y.min(), base_val if not baseline.empty else y.min())
-hi = max(y.max(), base_val if not baseline.empty else y.max())
-pad = max(2.0, (hi - lo) * 0.4)
-ax.set_ylim(lo - pad, hi + pad)
-
-ax.legend()
-ax.set_title(
-    "Residual Disclosure vs Privacy Budget (25 LD neighbors, 20 trials)",
-    fontsize=13, fontweight="bold", pad=15,
-)
-ax.grid(axis="y", linestyle="--", alpha=0.5)
+plt.suptitle("HelixGuard: Differential Privacy Sweep (James Jones, 20 trials/epsilon)",
+             fontsize=13, fontweight="bold")
 fig.tight_layout()
 
 os.makedirs("docs", exist_ok=True)
-plt.savefig(OUT, dpi=300)
-print(f"Chart regenerated from {CSV} -> {OUT}")
+plt.savefig(OUT, dpi=300, bbox_inches="tight")
+print(f"Chart saved to {OUT}")

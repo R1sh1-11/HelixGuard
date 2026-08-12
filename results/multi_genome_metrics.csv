@@ -1,0 +1,11 @@
+Genome,Total_SNPs,SNPs_Sanitized,LD_Tagged,LD_Perturbed,Disclosure_Rate_%,Utility,Time_s
+James_Jones,643535,15,25,10,97.39,PASS,15.53
+Joshua_Yoakem,631454,19,21,12,96.58,PASS,15.54
+Marika_Forsythe,601783,8,34,6,94.52,PASS,8.96
+participant10.txt,638570,9,10,5,98.32,PASS,10.26
+participant4.txt,638531,22,25,16,96.0,PASS,9.88
+participant5.txt,601888,15,35,10,89.66,PASS,8.86
+participant6.txt,643535,16,24,11,97.21,PASS,11.34
+participant7.txt,643535,19,24,14,96.69,PASS,9.11
+participant8.txt,638531,18,25,12,96.73,PASS,11.18
+participant9.txt,638468,14,10,8,97.27,PASS,9.42
