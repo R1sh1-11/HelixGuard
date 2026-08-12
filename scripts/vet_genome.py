@@ -28,13 +28,15 @@ def main():
     args = p.parse_args()
 
     from src.parser import parse_genome
+    from src.blocklist_io import load_reference_map
+
+    ref = load_reference_map()
 
     conn = sqlite3.connect("data/blocklist.db")
-    ref = {f"rs{r[0]}": str(r[1]).strip().upper()
-           for r in conn.execute('SELECT "RS# (dbSNP)", ReferenceAllele FROM blocklist')
-           if r[1]}
-    ld_targets = {r[0] for r in conn.execute("SELECT DISTINCT target_rsid FROM ld_neighbors")}
-    ld_neighbors = {r[0] for r in conn.execute("SELECT DISTINCT neighbor_rsid FROM ld_neighbors")}
+    ld_targets = {r[0] for r in conn.execute(
+        "SELECT DISTINCT target_rsid FROM ld_neighbors")}
+    ld_neighbors_set = {r[0] for r in conn.execute(
+        "SELECT DISTINCT neighbor_rsid FROM ld_neighbors")}
     conn.close()
 
     df = parse_genome(args.path)
@@ -49,7 +51,7 @@ def main():
     already = int((usable["genotype"] == usable["ref"]).sum())
     changed = int((usable["genotype"] != usable["ref"]).sum())
 
-    neighbors_present = int(df["rsid"].isin(ld_neighbors).sum())
+    neighbors_present = int(df["rsid"].isin(ld_neighbors_set).sum())
     ld_covered = int(hit["rsid"].isin(ld_targets).sum())
 
     ver = chip_version(args.path)

@@ -16,27 +16,12 @@ The actual LD-based inference attack lives in src/redteam_ld.py.
 
 import argparse
 import os
-import sqlite3
 
 import pandas as pd
 
-
-# ------------------------------------------------------------------
-# Load blocklist rsIDs from the database
-# ------------------------------------------------------------------
-def load_blocklist_rsids() -> set:
-    conn = sqlite3.connect("data/blocklist.db")
-    cursor = conn.cursor()
-    cursor.execute('SELECT "RS# (dbSNP)" FROM blocklist')
-    rsids = {f"rs{row[0]}" for row in cursor.fetchall()}
-    conn.close()
-    return rsids
+from src.blocklist_io import load_blocklist_rsids
 
 
-# ------------------------------------------------------------------
-# Parse a sanitized output TSV
-# (header: rsid chrom pos genotype ld_neighbor)
-# ------------------------------------------------------------------
 def load_output(path: str) -> pd.DataFrame:
     return pd.read_csv(
         path, sep="\t", low_memory=False,
@@ -45,9 +30,6 @@ def load_output(path: str) -> pd.DataFrame:
     )
 
 
-# ------------------------------------------------------------------
-# Parse an original 23andMe genome file (no header, # comments)
-# ------------------------------------------------------------------
 def load_ground_truth(path: str) -> pd.DataFrame:
     rows = []
     with open(path, "r", errors="ignore") as f:
@@ -61,17 +43,11 @@ def load_ground_truth(path: str) -> pd.DataFrame:
     return pd.DataFrame(rows).set_index("rsid")
 
 
-# ------------------------------------------------------------------
-# Residual disclosure measurement
-# ------------------------------------------------------------------
 def attack(sanitized: pd.DataFrame, ground_truth: pd.DataFrame,
            target_rsids: set) -> dict:
     """
     For each targeted SNP present in both files, check whether the released
-    genotype still matches the truth.
-
-    Vectorized: iterating 600k+ rows per call made repeated-trial sweeps
-    unusably slow.
+    genotype still matches the truth. Vectorized.
     """
     df = sanitized[sanitized["rsid"].isin(target_rsids)].merge(
         ground_truth, left_on="rsid", right_index=True, how="inner"
@@ -122,9 +98,6 @@ def save_csv(res: dict, path: str):
     print(f"[INFO] Saved to {path}")
 
 
-# ------------------------------------------------------------------
-# CLI
-# ------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(
         description="Measure residual disclosure in sanitized genome output."
@@ -157,8 +130,7 @@ def main():
 
     if args.mode in ("naive", "compare"):
         if not os.path.exists(args.naive_file):
-            print(f"\n[SKIP] {args.naive_file} not found -- "
-                  f"run helixguard with --no-dp first")
+            print(f"\n[SKIP] {args.naive_file} not found")
         else:
             df = load_output(args.naive_file)
             target = blocklist | set(
