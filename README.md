@@ -201,7 +201,7 @@ Scripts under `scripts/` run normally with `python scripts/name.py`.
 ```bash
 python scripts/check_state.py            # DB and cohort health, 4 verdicts
 python scripts/carrier_check.py          # carrier concealment, the headline metric
-python scripts/batch_validate.py         # all 10 genomes, 5 metrics each
+python scripts/batch_validate.py         # all 8 genomes, 5 metrics each
 python scripts/vet_genome.py <file>      # profile a single genome before adding it
 python scripts/epsilon_sweep.py --trials 20
 python src/plot_tradeoff.py              # regenerates docs/privacy_utility_tradeoff.png
@@ -238,9 +238,9 @@ helixguard/
 
 ## Results
 
-Evaluated on 10 raw 23andMe exports from the Personal Genome Project (Harvard).
+Evaluated on 8 raw 23andMe exports from the Personal Genome Project (Harvard).
 
-### Carrier concealment: 51 carriers, 0 exposed, 100%
+### Carrier concealment: 40 carriers, 0 exposed, 100%
 
 Every risk genotype present in the ten genomes was replaced with the population reference.
 
@@ -252,11 +252,11 @@ Every risk genotype present in the ten genomes was replaced with the population 
 | participant4 | 6 | 0 | 100% |
 | participant5 | 5 | 0 | 100% |
 | participant6 | 5 | 0 | 100% |
-| participant7 | 5 | 0 | 100% |
-| participant8 | 6 | 0 | 100% |
-| participant9 | 6 | 0 | 100% |
-| participant10 | 4 | 0 | 100% |
-| **Cohort** | **51** | **0** | **100%** |
+| participant7 | 6 | 0 | 100% |
+| participant8 | 4 | 0 | 100% |
+| **Cohort** | **40** | **0** | **100%** |
+
+Two files originally used in early testing were found to be exact byte-for-byte duplicates of other files in the set and were removed; the participants originally numbered 9 and 10 were renumbered to 7 and 8 to fill the gap. See `data/Sources.md` for the full note.
 
 Concretely, from one participant:
 
@@ -267,7 +267,7 @@ rs144848    truth AC    released AA    # BRCA2
 rs405509    truth GG    released TT    # APOE promoter
 ```
 
-All 10 sanitized files pass third-party parse validation. Mean runtime 11 seconds.
+All 8 sanitized files pass third-party parse validation. Mean runtime 11 seconds.
 
 ### Reading the two metrics
 
@@ -323,13 +323,11 @@ Read these before trusting HelixGuard with anything that matters.
 
 **Only six genes are covered.** BRCA1, BRCA2, APOE, HTT, F5, LDLR. Every other disease marker in your file passes through untouched. This is not a general-purpose genomic privacy tool.
 
-**Allele frequencies come from the 10-genome cohort**, not an external population panel. Both `dp_noise.py` and `redteam_ld.py` derive observed alleles this way. Accuracy improves with cohort size.
+**Allele frequencies come from the 8-genome cohort**, not an external population panel. Both `dp_noise.py` and `redteam_ld.py` derive observed alleles this way. Accuracy improves with cohort size.
 
 **Around 3.5% of rows per file are unrecognized genotypes** that pass through unchanged. Almost certainly single-allele calls on X, Y, and mitochondrial DNA that the validator does not cover. None of the six target genes sit on those chromosomes, so results should be unaffected, but this was never formally investigated.
 
-**Two possible duplicate pairs in the evaluation cohort.** participant6 and participant7 have identical SNP counts and identical metrics, as do participant4 and participant8. Verify independence before treating this as ten fully distinct participants.
-
-**Chip version is unknown for 7 of the 10 genomes**, because those exports use a non-standard header that `vet_genome.py` cannot parse.
+**Chip version is unknown for 5 of the 8 genomes** (participant4 through participant8), because those exports use a non-standard header that `vet_genome.py` cannot parse.
 
 **The naive baseline replaces rather than blanks.** The original design called for blanking blocklisted SNPs. This implementation substitutes reference genotypes instead, which is a stronger baseline than specified. Noted so nobody assumes blanking when reading the comparison.
 
@@ -367,6 +365,7 @@ Built for altREU as a ten-week undergraduate research project.
 
 - **Rishi:** sanitization pipeline, differential privacy layer, red team evaluation, CLI, tooling
 - **Srikritha Kosuri:** file parsing, ClinVar blocklist construction, LD neighbor logic, utility validation, genome sourcing
+- **Generative AI:** Claude & Gemini
 
 ## License
 
