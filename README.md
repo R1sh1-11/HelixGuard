@@ -363,7 +363,7 @@ Read these before trusting HelixGuard with anything that matters.
 
 Built for altREU as a ten-week undergraduate research project.
 
-- **Rishi:** sanitization pipeline, differential privacy layer, red team evaluation, CLI, tooling
+- **Rishi Nalam:** sanitization pipeline, differential privacy layer, red team evaluation, CLI, tooling
 - **Srikritha Kosuri:** file parsing, ClinVar blocklist construction, LD neighbor logic, utility validation, genome sourcing
 - **Generative AI:** Claude & Gemini
 
