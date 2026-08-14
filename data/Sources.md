@@ -17,6 +17,6 @@ Sourced from the Personal Genome Project (PGP). Used for testing and validation 
 | Participant 7 | v5 | 638,468 | 503 | 6 | [PGP Collection](https://my.pgp-hms.org/) |
 | Participant 8 | v5 | 638,570 | 526 | 4 | [PGP Collection](https://my.pgp-hms.org/) |
 
-**Cohort size: 8 genomes.** Two files originally used in early testing turned out to be exact byte-for-byte duplicates of other files in the set and were removed. The two participants originally numbered 9 and 10 were renumbered to 7 and 8 to fill the resulting gap; the data itself is unchanged, only the file names differ from earlier drafts of this document.
+**Cohort size: 8 genomes.** Two files originally used in early testing turned out to be exact byte-for-byte duplicates of other files in the set and were removed. The two participants originally numbered 9 and 10 were renumbered to 7 and 8 to fill the resulting gap; the data itself is unchanged, only the file names differ from earlier drafts of this document (missing actual links to sources after Marika).
 
 *Source: [Personal Genome Project](https://pgp.med.harvard.edu/data)*
