@@ -1,4 +1,4 @@
-# HelixGuard
+# HelixGuard | Protecting Genomic Privacy
 
 A local command-line tool that strips disease-risk markers out of raw 23andMe files before you share them with anyone.
 
