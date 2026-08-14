@@ -1,17 +1,13 @@
-# Ignore massive raw genomic test files from PGP data
-data/raw/*.txt
-data/raw/*.vcf
+# Environments & Virtual Environments
+venv/
+env/
+venv311/
+.env
+backup/
 
-# Ignore massive upstream ClinVar files
-data/variant_summary.txt.gz
-data/variant_summary.txt
-
-# Ignore generated blocklist files (regenerate locally via build_blocklist.py)
-data/blocklist.csv
-data/blocklist.db
-
-# Python environment & cache artifacts
+# Python & Testing Cache
 __pycache__/
+*.py[cod]
 *.pyc
 *.pyo
 *.pyd
@@ -19,29 +15,28 @@ __pycache__/
 .coverage
 htmlcov/
 *.egg-info/
+tests/__pycache__/
 
-# Local Virtual Environments
-venv/
-env/
-.env
-venv311/
-backup/
-
-# Data files
+# Data Files & Large Genomic Sources
+data/raw/*.txt
+data/raw/*.vcf
+data/genome_*.txt
+data/variant_summary.txt
+data/variant_summary.txt.gz
+data/blocklist.csv
+data/blocklist.db
 data/*.txt
 data/*.gz
 data/*.db
 
-# Result outputs (keep CSVs, ignore large txt files)
-results/*.txt
+# Pipeline Outputs & Results
+results/sanitized_genome_*.txt
+results/naive_genome_*.txt
 results/output*.txt
 results/output_eps*.txt
+results/slide7.txt
 
-# Tests
-tests/__pycache__/
-
-# macOS
+# Operating System & Editor Files
 .DS_Store
-
-# Editor
+Thumbs.db
 .vscode/
