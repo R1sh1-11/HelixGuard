@@ -137,6 +137,8 @@ Tagged 25 LD neighbors for DP noise.
 Saved sanitized genome to cleaned_genome.txt
 ```
 
+"Replaced 550" counts every position that matched the blocklist, including the many where your genotype already equals the reference. The number of genotypes that actually change is much smaller. See "Understanding your output" below.
+
 `cleaned_genome.txt` is the file you share. Keep your original somewhere private.
 
 Runtime is about 11 seconds for a typical file.
@@ -185,7 +187,7 @@ print(d[['rsid','genotype_b','genotype_a']].to_string())
 
 ### Running from `src/`
 
-Anything in `src/` must be run as a module or the project root will not be on `sys.path`:
+Files in `src/` that import from `src` must be run as a module, or the project root will not be on `sys.path`:
 
 ```bash
 python -m src.redteam --mode compare --ground-truth data/genome_X.txt --save-csv    # works
@@ -242,7 +244,7 @@ Evaluated on 8 raw 23andMe exports from the Personal Genome Project (Harvard).
 
 ### Carrier concealment: 40 carriers, 0 exposed, 100%
 
-Every risk genotype present in the ten genomes was replaced with the population reference.
+Every risk genotype present in the eight genomes was replaced with the population reference.
 
 | Genome | Carriers | Exposed | Concealment |
 | :--- | ---: | ---: | ---: |
@@ -345,23 +347,23 @@ Read these before trusting HelixGuard with anything that matters.
 
 ## Troubleshooting
 
-**`ModuleNotFoundError: No module named 'src'`** — you ran a file in `src/` directly. Use `python -m src.modulename` instead.
+**`ModuleNotFoundError: No module named 'src'`**: you ran a file in `src/` directly. Use `python -m src.modulename` instead.
 
-**`ImportError` mentioning `sklearn.tree._tree`** — wrong Python version. You need 3.11 and `scikit-learn==1.4.2`.
+**`ImportError` mentioning `sklearn.tree._tree`**: wrong Python version. You need 3.11 and `scikit-learn==1.4.2`.
 
-**`FileNotFoundError` on `blocklist.db`** — you skipped the database build. See Quickstart step 4.
+**`FileNotFoundError` on `blocklist.db`**: you skipped the database build. See Quickstart step 4.
 
-**`check_state.py` reports the LD table empty** — run `python scripts/import_ld_neighbors.py`.
+**`check_state.py` reports the LD table empty**: run `python scripts/import_ld_neighbors.py`.
 
-**Every genotype in the output looks unchanged** — this is usually correct. See "Understanding your output" above. If you want to confirm the pipeline ran, check that the console printed a nonzero "Replaced N flagged SNPs" line.
+**Every genotype in the output looks unchanged**: this is usually correct. See "Understanding your output" above. If you want to confirm the pipeline ran, check that the console printed a nonzero "Replaced N flagged SNPs" line.
 
-**PowerShell parser errors with `--flags`** — you copied a multi-line bash command. Put it on one line.
+**PowerShell parser errors with `--flags`**: you copied a multi-line bash command. Put it on one line.
 
 ---
 
 ## Credits
 
-Built for altREU as a ten-week undergraduate research project.
+Built for Portland State University's altREU program as a ten-week undergraduate research project. Appeared in the Portland State University altREU 2026 Summer Research Proceedings.
 
 - **Rishi Nalam:** sanitization pipeline, differential privacy layer, red team evaluation, CLI, tooling
 - **Srikritha Kosuri:** file parsing, ClinVar blocklist construction, LD neighbor logic, utility validation, genome sourcing
